@@ -30,6 +30,14 @@ const AuthProvider = ({children}) => {
             setUser(currentUser);
             console.log('Current User', currentUser);
             setLoading(false);
+            //if User  exists then issue a token
+            if(currentUser){
+                const loggedUser = {email: currentUser.email};
+                axios.post('http://localhost:5000/', loggedUser, {withCredentials: true})
+                .then(res => {
+                    console.log('Token Response', res.data);
+                })
+            }
         });
         return ()=>{
             return unsubscribe();
