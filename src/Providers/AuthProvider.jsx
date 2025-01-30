@@ -26,16 +26,27 @@ const AuthProvider = ({children}) => {
 
 
     useEffect(() =>{
-        const unsubscribe = onAuthStateChanged(auth, currentUser => {
+        const unsubscribe = onAuthStateChanged(auth, currentUser => 
+            {
+            const userEmail = currentUser?.email || user.email;
+            const loggedUser = {email: userEmail};
             setUser(currentUser);
             console.log('Current User', currentUser);
             setLoading(false);
             //if User  exists then issue a token
             if(currentUser){
-                const loggedUser = {email: currentUser.email};
+                
                 axios.post('http://localhost:5000/', loggedUser, {withCredentials: true})
                 .then(res => {
                     console.log('Token Response', res.data);
+                })
+            }
+            else{
+                axios.post('http://localhost:5000/logout', loggedUser, {
+                    withCredentials: true
+                })
+                .then(res =>{
+                    console.log(res.data);
                 })
             }
         });
